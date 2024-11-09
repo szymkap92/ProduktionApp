@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function ProductionCalculator() {
-  const [isLoading, setIsLoading] = useState(true); // Dodajemy stan ładowania
+  const [isLoading, setIsLoading] = useState(true);
   const [zmiana, setZmiana] = useState("1");
   const [numerNaWozku, setNumerNaWozku] = useState("");
   const [numerSamochodu, setNumerSamochodu] = useState("");
@@ -12,7 +12,7 @@ export default function ProductionCalculator() {
   const [czasZakonczenia, setCzasZakonczenia] = useState(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1500);
+    const timer = setTimeout(() => setIsLoading(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -65,10 +65,18 @@ export default function ProductionCalculator() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-200">
-        <p className="text-lg font-semibold text-blue-500">
-          Loading application...
-        </p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+        {/* Logo */}
+        <Image
+          src="/logo2.png"
+          alt="Logo"
+          width={140}
+          height={140}
+          className="mb-4"
+        />
+
+        {/* Animowany napis */}
+        <p className="text-lg font-semibold animate-pulse">Loading...</p>
       </div>
     );
   }
@@ -78,8 +86,8 @@ export default function ProductionCalculator() {
       <Image
         src="/logo.png"
         alt="Logo"
-        width={100}
-        height={100}
+        width={110}
+        height={110}
         className="mb-4"
       />
 
@@ -91,7 +99,7 @@ export default function ProductionCalculator() {
           <select
             value={zmiana}
             onChange={(e) => setZmiana(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-black bg-white"
+            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600  text-black bg-white"
           >
             <option value="1">1 Schicht</option>
             <option value="2">2 Schicht</option>
@@ -106,27 +114,27 @@ export default function ProductionCalculator() {
             type="number"
             value={numerNaWozku}
             onChange={(e) => setNumerNaWozku(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-black bg-white"
+            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600  text-black bg-white"
             placeholder="Geben Sie die Nummer auf dem Wagen ein"
           />
         </label>
 
         <label className="block mb-4">
           <span className="text-gray-800 font-medium">
-            Aktueller Takt des Fahrzeugs auf der Linie:
+            Nummer des aktuellen Fahrzeugs auf der Linie:
           </span>
           <input
             type="number"
             value={numerSamochodu}
             onChange={(e) => setNumerSamochodu(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-black bg-white"
+            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600  text-black bg-white"
             placeholder="Geben Sie die Autonummer ein"
           />
         </label>
 
         <button
           onClick={obliczCzasProdukcji}
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+          className="w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition duration-300"
         >
           Berechnen Sie die Produktionszeit
         </button>
