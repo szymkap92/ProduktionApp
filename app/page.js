@@ -68,7 +68,7 @@ export default function ProductionCalculator() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
         {/* Logo */}
         <Image
-          src="/logo2.png"
+          src="/logo.png"
           alt="Logo"
           width={140}
           height={140}
