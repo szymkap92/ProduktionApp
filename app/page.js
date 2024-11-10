@@ -29,15 +29,15 @@ export default function ProductionCalculator() {
         return (
           (godzina === 8 && minuta >= 0 && minuta < 30) ||
           (godzina === 10 && minuta >= 45) ||
-          (godzina === 11 && minuta < 20) ||
-          (godzina === 13 && minuta < 12)
+          (godzina === 11 && minuta < 21) ||
+          (godzina === 13 && minuta < 13)
         );
       } else if (zmiana === "2") {
         return (
           (godzina === 16 && minuta >= 45) ||
           (godzina === 17 && minuta < 0) ||
           (godzina === 19 && minuta < 30) ||
-          (godzina === 21 && minuta < 12)
+          (godzina === 21 && minuta < 13)
         );
       }
       return false;
@@ -103,6 +103,7 @@ export default function ProductionCalculator() {
           >
             <option value="1">1 Schicht</option>
             <option value="2">2 Schicht</option>
+            <option value="2">3 Schicht</option>
           </select>
         </label>
 
@@ -156,7 +157,7 @@ export default function ProductionCalculator() {
       <footer className="footer">
         <p>
           &copy; 2024 My Production Calculator. All rights reserved. | Developed
-          by Szymon K
+          by Szymon K | Version 1.0.0
         </p>
       </footer>
     </div>
