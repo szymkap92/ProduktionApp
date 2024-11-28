@@ -12,7 +12,7 @@ export default function ProductionCalculator() {
   const [czasZakonczenia, setCzasZakonczenia] = useState(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2500);
+    const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -20,7 +20,9 @@ export default function ProductionCalculator() {
     const numerNaWozkuInt = parseInt(numerNaWozku, 10);
     const numerSamochoduInt = parseInt(numerSamochodu, 10);
     const pozostaleBaterie = numerNaWozkuInt - numerSamochoduInt;
-    const czasTrwaniaProdukcji = pozostaleBaterie * 1.4;
+
+    const mnoznikCzasu = zmiana === "3" ? 2.8 : 1.4;
+    const czasTrwaniaProdukcji = pozostaleBaterie * mnoznikCzasu;
     const zaokraglonyCzasTrwaniaProdukcji = Math.round(czasTrwaniaProdukcji);
     let aktualnyCzas = new Date();
 
@@ -38,6 +40,13 @@ export default function ProductionCalculator() {
           (godzina === 17 && minuta < 0) ||
           (godzina === 19 && minuta < 30) ||
           (godzina === 21 && minuta < 13)
+        );
+      } else if (zmiana === "3") {
+        return (
+          (godzina === 23 && minuta >= 45 && minuta < 60) || // Przerwa 23:45 - 00:00
+          (godzina === 0 && minuta < 15) || // Kontynuacja przerwy do 00:15
+          (godzina === 2 && minuta >= 0 && minuta < 28) || // Przerwa 02:00 - 02:28
+          (godzina === 4 && minuta >= 30 && minuta < 45) // Przerwa 04:30 - 04:45
         );
       }
       return false;
@@ -99,11 +108,11 @@ export default function ProductionCalculator() {
           <select
             value={zmiana}
             onChange={(e) => setZmiana(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600  text-black bg-white"
+            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
           >
             <option value="1">1 Schicht</option>
             <option value="2">2 Schicht</option>
-            <option value="2">3 Schicht</option>
+            <option value="3">3 Schicht</option>
           </select>
         </label>
 
@@ -115,7 +124,7 @@ export default function ProductionCalculator() {
             type="number"
             value={numerNaWozku}
             onChange={(e) => setNumerNaWozku(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600  text-black bg-white"
+            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
             placeholder="Geben Sie die Nummer auf dem Wagen ein"
           />
         </label>
@@ -128,7 +137,7 @@ export default function ProductionCalculator() {
             type="number"
             value={numerSamochodu}
             onChange={(e) => setNumerSamochodu(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600  text-black bg-white"
+            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
             placeholder="Geben Sie die Autonummer ein"
           />
         </label>
@@ -157,7 +166,7 @@ export default function ProductionCalculator() {
       <footer className="footer">
         <p>
           &copy; 2024 My Production Calculator. All rights reserved. | Developed
-          by Szymon K | Version 1.0.0
+          by Szymon K | Version 1.0.1
         </p>
       </footer>
     </div>
