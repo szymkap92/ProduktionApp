@@ -10,11 +10,54 @@ export default function ProductionCalculator() {
   const [numerSamochodu, setNumerSamochodu] = useState("");
   const [czasProdukcji, setCzasProdukcji] = useState(null);
   const [czasZakonczenia, setCzasZakonczenia] = useState(null);
+  const [aktualnyCzas, setAktualnyCzas] = useState(new Date());
+  const [czyPrzerwa, setCzyPrzerwa] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
+
+  // Aktualizacja czasu co sekundę
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setAktualnyCzas(now);
+
+      // Sprawdzenie, czy trwa przerwa
+      const godzina = now.getHours();
+      const minuta = now.getMinutes();
+      setCzyPrzerwa(jestPrzerwa(godzina, minuta));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [zmiana]);
+
+  const jestPrzerwa = (godzina, minuta) => {
+    if (zmiana === "1") {
+      return (
+        (godzina === 8 && minuta >= 0 && minuta < 30) ||
+        (godzina === 10 && minuta >= 45) ||
+        (godzina === 11 && minuta < 21) ||
+        (godzina === 13 && minuta < 13)
+      );
+    } else if (zmiana === "2") {
+      return (
+        (godzina === 16 && minuta >= 45) ||
+        (godzina === 17 && minuta < 0) ||
+        (godzina === 19 && minuta < 30) ||
+        (godzina === 21 && minuta < 13)
+      );
+    } else if (zmiana === "3") {
+      return (
+        (godzina === 23 && minuta >= 45 && minuta < 60) || // Przerwa 23:45 - 00:00
+        (godzina === 0 && minuta < 15) || // Kontynuacja przerwy do 00:15
+        (godzina === 2 && minuta >= 0 && minuta < 28) || // Przerwa 02:00 - 02:28
+        (godzina === 4 && minuta >= 30 && minuta < 45) // Przerwa 04:30 - 04:45
+      );
+    }
+    return false;
+  };
 
   const obliczCzasProdukcji = () => {
     const numerNaWozkuInt = parseInt(numerNaWozku, 10);
@@ -24,39 +67,13 @@ export default function ProductionCalculator() {
     const mnoznikCzasu = zmiana === "3" ? 2.8 : 1.4;
     const czasTrwaniaProdukcji = pozostaleBaterie * mnoznikCzasu;
     const zaokraglonyCzasTrwaniaProdukcji = Math.round(czasTrwaniaProdukcji);
-    let aktualnyCzas = new Date();
-
-    const jestPrzerwa = (godzina, minuta) => {
-      if (zmiana === "1") {
-        return (
-          (godzina === 8 && minuta >= 0 && minuta < 30) ||
-          (godzina === 10 && minuta >= 45) ||
-          (godzina === 11 && minuta < 21) ||
-          (godzina === 13 && minuta < 13)
-        );
-      } else if (zmiana === "2") {
-        return (
-          (godzina === 16 && minuta >= 45) ||
-          (godzina === 17 && minuta < 0) ||
-          (godzina === 19 && minuta < 30) ||
-          (godzina === 21 && minuta < 13)
-        );
-      } else if (zmiana === "3") {
-        return (
-          (godzina === 23 && minuta >= 45 && minuta < 60) || // Przerwa 23:45 - 00:00
-          (godzina === 0 && minuta < 15) || // Kontynuacja przerwy do 00:15
-          (godzina === 2 && minuta >= 0 && minuta < 28) || // Przerwa 02:00 - 02:28
-          (godzina === 4 && minuta >= 30 && minuta < 45) // Przerwa 04:30 - 04:45
-        );
-      }
-      return false;
-    };
+    let czasProdukcjiLokalny = new Date();
 
     let minutyProdukcji = zaokraglonyCzasTrwaniaProdukcji;
     while (minutyProdukcji > 0) {
-      aktualnyCzas.setMinutes(aktualnyCzas.getMinutes() + 1);
-      const godzina = aktualnyCzas.getHours();
-      const minuta = aktualnyCzas.getMinutes();
+      czasProdukcjiLokalny.setMinutes(czasProdukcjiLokalny.getMinutes() + 1);
+      const godzina = czasProdukcjiLokalny.getHours();
+      const minuta = czasProdukcjiLokalny.getMinutes();
 
       if (!jestPrzerwa(godzina, minuta)) {
         minutyProdukcji--;
@@ -65,7 +82,10 @@ export default function ProductionCalculator() {
 
     setCzasProdukcji(zaokraglonyCzasTrwaniaProdukcji);
     setCzasZakonczenia(
-      `${aktualnyCzas.getHours().toString().padStart(2, "0")}:${aktualnyCzas
+      `${czasProdukcjiLokalny
+        .getHours()
+        .toString()
+        .padStart(2, "0")}:${czasProdukcjiLokalny
         .getMinutes()
         .toString()
         .padStart(2, "0")}`
@@ -102,53 +122,72 @@ export default function ProductionCalculator() {
 
       <h1 className="title">Produktionszeitrechner</h1>
 
-      <div className="container">
-        <label className="block mb-4">
-          <span className="text-gray-800 font-medium">Wähle die Schicht:</span>
-          <select
-            value={zmiana}
-            onChange={(e) => setZmiana(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
+      {/* Zegar */}
+      <p className="text-lg font-semibold mb-4">
+        Aktuelle Uhrzeit:{" "}
+        {`${aktualnyCzas.getHours().toString().padStart(2, "0")}:${aktualnyCzas
+          .getMinutes()
+          .toString()
+          .padStart(2, "0")}`}
+      </p>
+
+      {/* Wyświetlanie filiżanki kawy podczas przerwy */}
+      {czyPrzerwa ? (
+        <div>
+          <p className="text-lg font-semibold">Die Pause läuft! ☕</p>
+          <Image src="/coffe.jpg" alt="Coffee Break" width={130} height={130} />
+        </div>
+      ) : (
+        <div className="container">
+          <label className="block mb-4">
+            <span className="text-gray-800 font-medium">
+              Wähle die Schicht:
+            </span>
+            <select
+              value={zmiana}
+              onChange={(e) => setZmiana(e.target.value)}
+              className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
+            >
+              <option value="1">1 Schicht</option>
+              <option value="2">2 Schicht</option>
+              <option value="3">3 Schicht</option>
+            </select>
+          </label>
+
+          <label className="block mb-4">
+            <span className="text-gray-800 font-medium">
+              Takt des letzten Materials auf dem Wagen:
+            </span>
+            <input
+              type="number"
+              value={numerNaWozku}
+              onChange={(e) => setNumerNaWozku(e.target.value)}
+              className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
+              placeholder="Geben Sie die Nummer auf dem Wagen ein"
+            />
+          </label>
+
+          <label className="block mb-4">
+            <span className="text-gray-800 font-medium">
+              Nummer des aktuellen Fahrzeugs auf der Linie:
+            </span>
+            <input
+              type="number"
+              value={numerSamochodu}
+              onChange={(e) => setNumerSamochodu(e.target.value)}
+              className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
+              placeholder="Geben Sie die Autonummer ein"
+            />
+          </label>
+
+          <button
+            onClick={obliczCzasProdukcji}
+            className="w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition duration-300"
           >
-            <option value="1">1 Schicht</option>
-            <option value="2">2 Schicht</option>
-            <option value="3">3 Schicht</option>
-          </select>
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-800 font-medium">
-            Takt des letzten Materials auf dem Wagen:
-          </span>
-          <input
-            type="number"
-            value={numerNaWozku}
-            onChange={(e) => setNumerNaWozku(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
-            placeholder="Geben Sie die Nummer auf dem Wagen ein"
-          />
-        </label>
-
-        <label className="block mb-4">
-          <span className="text-gray-800 font-medium">
-            Nummer des aktuellen Fahrzeugs auf der Linie:
-          </span>
-          <input
-            type="number"
-            value={numerSamochodu}
-            onChange={(e) => setNumerSamochodu(e.target.value)}
-            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
-            placeholder="Geben Sie die Autonummer ein"
-          />
-        </label>
-
-        <button
-          onClick={obliczCzasProdukcji}
-          className="w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition duration-300"
-        >
-          Berechnen Sie die Produktionszeit
-        </button>
-      </div>
+            Berechnen Sie die Produktionszeit
+          </button>
+        </div>
+      )}
 
       {czasProdukcji !== null && (
         <div className="result">
@@ -166,7 +205,7 @@ export default function ProductionCalculator() {
       <footer className="footer">
         <p>
           &copy; 2024 My Production Calculator. All rights reserved. | Developed
-          by Szymon K | Version 1.0.1
+          by Szymon K | Version 1.0.2
         </p>
       </footer>
     </div>
