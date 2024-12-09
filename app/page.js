@@ -20,20 +20,24 @@ export default function ProductionCalculator() {
 
   // Aktualizacja czasu co sekundę
   useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      setAktualnyCzas(now);
+    if (zmiana) {
+      const interval = setInterval(() => {
+        const now = new Date();
+        setAktualnyCzas(now);
 
-      // Sprawdzenie, czy trwa przerwa
-      const godzina = now.getHours();
-      const minuta = now.getMinutes();
-      setCzyPrzerwa(jestPrzerwa(godzina, minuta));
-    }, 1000);
+        // Sprawdzenie, czy trwa przerwa
+        const godzina = now.getHours();
+        const minuta = now.getMinutes();
+        setCzyPrzerwa(jestPrzerwa(godzina, minuta));
+      }, 1000);
 
-    return () => clearInterval(interval);
-  }, [zmiana]);
+      return () => clearInterval(interval);
+    }
+  }, [jestPrzerwa, zmiana]);
 
-  const jestPrzerwa = (godzina, minuta) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const jestPrzerwa = useCallback((godzina, minuta) => {
+    if (typeof zmiana !== "string") return false; // Walidacja, czy zmiana to string
     if (zmiana === "1") {
       return (
         (godzina === 8 && minuta >= 0 && minuta < 30) ||
@@ -57,7 +61,7 @@ export default function ProductionCalculator() {
       );
     }
     return false;
-  };
+  });
 
   const obliczCzasProdukcji = () => {
     const numerNaWozkuInt = parseInt(numerNaWozku, 10);
