@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 export default function ProductionCalculator() {
@@ -12,6 +12,36 @@ export default function ProductionCalculator() {
   const [czasZakonczenia, setCzasZakonczenia] = useState(null);
   const [aktualnyCzas, setAktualnyCzas] = useState(new Date());
   const [czyPrzerwa, setCzyPrzerwa] = useState(false);
+
+  // Przenieś funkcję "jestPrzerwa" na górę i opakuj w useCallback
+  const jestPrzerwa = useCallback(
+    (godzina, minuta) => {
+      if (zmiana === "1") {
+        return (
+          (godzina === 8 && minuta >= 0 && minuta < 30) ||
+          (godzina === 10 && minuta >= 45) ||
+          (godzina === 11 && minuta < 21) ||
+          (godzina === 13 && minuta < 13)
+        );
+      } else if (zmiana === "2") {
+        return (
+          (godzina === 16 && minuta >= 45) ||
+          (godzina === 17 && minuta < 0) ||
+          (godzina === 19 && minuta < 30) ||
+          (godzina === 21 && minuta < 13)
+        );
+      } else if (zmiana === "3") {
+        return (
+          (godzina === 23 && minuta >= 45 && minuta < 60) || // Przerwa 23:45 - 00:00
+          (godzina === 0 && minuta < 15) || // Kontynuacja przerwy do 00:15
+          (godzina === 2 && minuta >= 0 && minuta < 28) || // Przerwa 02:00 - 02:28
+          (godzina === 4 && minuta >= 30 && minuta < 45) // Przerwa 04:30 - 04:45
+        );
+      }
+      return false;
+    },
+    [zmiana]
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
@@ -34,34 +64,6 @@ export default function ProductionCalculator() {
       return () => clearInterval(interval);
     }
   }, [jestPrzerwa, zmiana]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const jestPrzerwa = useCallback((godzina, minuta) => {
-    if (typeof zmiana !== "string") return false; // Walidacja, czy zmiana to string
-    if (zmiana === "1") {
-      return (
-        (godzina === 8 && minuta >= 0 && minuta < 30) ||
-        (godzina === 10 && minuta >= 45) ||
-        (godzina === 11 && minuta < 21) ||
-        (godzina === 13 && minuta < 13)
-      );
-    } else if (zmiana === "2") {
-      return (
-        (godzina === 16 && minuta >= 45) ||
-        (godzina === 17 && minuta < 0) ||
-        (godzina === 19 && minuta < 30) ||
-        (godzina === 21 && minuta < 13)
-      );
-    } else if (zmiana === "3") {
-      return (
-        (godzina === 23 && minuta >= 45 && minuta < 60) || // Przerwa 23:45 - 00:00
-        (godzina === 0 && minuta < 15) || // Kontynuacja przerwy do 00:15
-        (godzina === 2 && minuta >= 0 && minuta < 28) || // Przerwa 02:00 - 02:28
-        (godzina === 4 && minuta >= 30 && minuta < 45) // Przerwa 04:30 - 04:45
-      );
-    }
-    return false;
-  });
 
   const obliczCzasProdukcji = () => {
     const numerNaWozkuInt = parseInt(numerNaWozku, 10);
