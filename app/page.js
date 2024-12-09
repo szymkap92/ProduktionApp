@@ -18,7 +18,7 @@ export default function ProductionCalculator() {
     (godzina, minuta) => {
       if (zmiana === "1") {
         return (
-          (godzina === 8 && minuta >= 0 && minuta < 30) ||
+          (godzina === 8 && minuta >= 0 && minuta < 15) ||
           (godzina === 10 && minuta >= 45) ||
           (godzina === 11 && minuta < 21) ||
           (godzina === 13 && minuta < 13)
