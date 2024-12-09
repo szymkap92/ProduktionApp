@@ -1,0 +1,56 @@
+.clockContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.clock {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.needle {
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: bottom center;
+  height: 65px;
+  width: 3px;
+}
+
+.needle.hour {
+  height: 50px;
+}
+
+.needle.minute {
+  height: 70px;
+}
+
+.needle.second {
+  background-color: red;
+  height: 80px;
+}
+
+.centerPoint {
+  background-color: black;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+}
+
+.time {
+  font-size: 24px;
+  margin-top: 10px;
+}
+
+.date {
+  font-size: 18px;
+  color: gray;
+}
