@@ -52,7 +52,6 @@ export default function ProductionCalculator() {
     } else if (zmiana === "3") {
       return (
         (godzina === 23 && minuta >= 45 && minuta < 60) ||
-        (godzina === 0 && minuta < 15) ||
         (godzina === 2 && minuta >= 0 && minuta < 28) ||
         (godzina === 4 && minuta >= 30 && minuta < 45)
       );
@@ -65,7 +64,7 @@ export default function ProductionCalculator() {
     const numerSamochoduInt = parseInt(numerSamochodu, 10);
     const pozostaleBaterie = numerNaWozkuInt - numerSamochoduInt;
 
-    const mnoznikCzasu = zmiana === "3" ? 2.8 : 1.4;
+    const mnoznikCzasu = zmiana === "3" ? 2.76 : 1.4;
     const czasTrwaniaProdukcji = pozostaleBaterie * mnoznikCzasu;
     const zaokraglonyCzasTrwaniaProdukcji = Math.round(czasTrwaniaProdukcji);
     let czasProdukcjiLokalny = new Date();
