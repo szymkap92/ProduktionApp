@@ -222,7 +222,7 @@ export default function ProductionCalculator() {
       <footer className="footer">
         <p>
           &copy; 2024 My Production Calculator. All rights reserved. | Developed
-          by Szymon K | Version 1.0.2
+          by Szymon K | Version 1.2.0
         </p>
       </footer>
     </div>
