@@ -39,5 +39,34 @@ button {
 }
 
 .logo {
-  @apply mb-4; /* Przykładowy margines na dole */
+  @apply mb-4;
+}
+
+/* Dark mode styles */
+body.dark {
+  @apply text-gray-100 bg-gray-900;
+}
+
+body.dark .container {
+  @apply bg-gray-800 shadow-lg;
+}
+
+body.dark .title {
+  @apply text-white;
+}
+
+body.dark label span {
+  @apply text-gray-200;
+}
+
+body.dark input {
+  @apply text-gray-100 bg-gray-700 border-gray-600;
+}
+
+body.dark .result {
+  @apply bg-gray-800 text-gray-100;
+}
+
+body.dark .footer {
+  @apply bg-gray-700 text-gray-300;
 }

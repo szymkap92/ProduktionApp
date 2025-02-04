@@ -5,6 +5,9 @@ import Image from "next/image";
 import styles from "./clock.module.css"; // Styl zegara analogowego
 
 export default function ProductionCalculator() {
+  const [productionStart, setProductionStart] = useState(null);
+  const [productionEnd, setProductionEnd] = useState(null);
+  const [notificationSent, setNotificationSent] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [zmiana, setZmiana] = useState("1");
   const [numerNaWozku, setNumerNaWozku] = useState("");
@@ -13,7 +16,9 @@ export default function ProductionCalculator() {
   const [czasZakonczenia, setCzasZakonczenia] = useState(null);
   const [aktualnyCzas, setAktualnyCzas] = useState(new Date());
   const [czyPrzerwa, setCzyPrzerwa] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
+  // Efekt ładowania
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -24,15 +29,36 @@ export default function ProductionCalculator() {
     const interval = setInterval(() => {
       const now = new Date();
       setAktualnyCzas(now);
-
-      // Sprawdzenie, czy trwa przerwa
       const godzina = now.getHours();
       const minuta = now.getMinutes();
       setCzyPrzerwa(jestPrzerwa(godzina, minuta));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [zmiana]);
+
+  // Powiadomienie przeglądarkowe przy zakończeniu produkcji
+  useEffect(() => {
+    if (productionEnd && !notificationSent) {
+      if (aktualnyCzas.getTime() >= productionEnd.getTime()) {
+        if ("Notification" in window) {
+          if (Notification.permission === "granted") {
+            new Notification("Produktion abgeschlossen", {
+              body: "Twoja produkcja dobiegła końca.",
+            });
+          } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then((permission) => {
+              if (permission === "granted") {
+                new Notification("Produktion abgeschlossen", {
+                  body: "Twoja produkcja dobiegła końca.",
+                });
+              }
+            });
+          }
+        }
+        setNotificationSent(true);
+      }
+    }
+  }, [aktualnyCzas, productionEnd, notificationSent]);
 
   const jestPrzerwa = (godzina, minuta) => {
     if (zmiana === "1") {
@@ -59,6 +85,8 @@ export default function ProductionCalculator() {
   };
 
   const obliczCzasProdukcji = () => {
+    setNotificationSent(false);
+
     const numerNaWozkuInt = parseInt(numerNaWozku, 10);
     const numerSamochoduInt = parseInt(numerSamochodu, 10);
     const pozostaleBaterie = numerNaWozkuInt - numerSamochoduInt;
@@ -89,6 +117,8 @@ export default function ProductionCalculator() {
         .toString()
         .padStart(2, "0")}`
     );
+    setProductionStart(new Date());
+    setProductionEnd(czasProdukcjiLokalny);
   };
 
   const getClockHandStyle = (value, range) => {
@@ -97,6 +127,32 @@ export default function ProductionCalculator() {
       transform: `translate(-50%, -100%) rotate(${rotation}deg)`,
     };
   };
+
+  const progress =
+    productionStart && productionEnd
+      ? Math.min(
+          ((aktualnyCzas - productionStart) /
+            (productionEnd - productionStart)) *
+            100,
+          100
+        )
+      : 0;
+
+  const getProgressBarColor = () => {
+    if (progress >= 90) return "#ff4d4d";
+    if (progress >= 60) return "#ffcc00";
+    if (progress >= 15) return "#ffff66";
+    return "#66ff66";
+  };
+
+  // Ustaw klasę "dark" na <body> w zależności od darkMode
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   if (isLoading) {
     return (
@@ -114,7 +170,19 @@ export default function ProductionCalculator() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div
+      className={`flex flex-col items-center justify-center min-h-screen p-6 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+      }`}
+    >
+      {/* Przełącznik trybu jasnego/ciemnego jako ikona */}
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="absolute top-4 right-4 text-2xl"
+      >
+        {darkMode ? "☀️" : "🌙"}
+      </button>
+
       <Image
         src="/logo.png"
         alt="Logo"
@@ -124,7 +192,7 @@ export default function ProductionCalculator() {
       />
       <h1 className="title">Produktionszeitrechner</h1>
 
-      {/* Zegar analogowy */}
+      {/* Analoge Uhr */}
       <div className={styles.clockContainer}>
         <div className={styles.clock}>
           <div
@@ -180,7 +248,7 @@ export default function ProductionCalculator() {
             value={numerNaWozku}
             onChange={(e) => setNumerNaWozku(e.target.value)}
             className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
-            placeholder="Geben Sie die Nummer auf dem Wagen ein"
+            placeholder="Geben Sie die Nummer am Wagen ein"
           />
         </label>
 
@@ -205,8 +273,9 @@ export default function ProductionCalculator() {
         </button>
       </div>
 
+      {/* Wynik */}
       {czasProdukcji !== null && (
-        <div className="result">
+        <div className="result mt-6">
           <p className="text-lg">
             <span className="font-semibold">Produktionsdauer:</span>{" "}
             {czasProdukcji} Minuten
@@ -218,10 +287,27 @@ export default function ProductionCalculator() {
         </div>
       )}
 
-      <footer className="footer">
+      {/* Progress Bar */}
+      {productionStart && productionEnd && (
+        <div className="mt-4 w-full">
+          <p className="mb-2">Produktionsfortschritt:</p>
+          <div className="w-full bg-gray-300 h-4 rounded">
+            <div
+              className="h-4 rounded"
+              style={{
+                width: `${progress}%`,
+                backgroundColor: getProgressBarColor(),
+              }}
+            ></div>
+          </div>
+          <p className="mt-2 text-sm">{Math.round(progress)}%</p>
+        </div>
+      )}
+
+      <footer className="footer mt-8">
         <p>
-          &copy; 2024 My Production Audi Calculator. All rights reserved. |
-          Developed by Szymon K | Version 1.2.1
+          &copy; 2025 My Production Audi Calculator. All rights reserved. |
+          Developed by Szymon K | Version 2.3.0
         </p>
       </footer>
     </div>
