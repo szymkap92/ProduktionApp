@@ -45,7 +45,6 @@ export default function ProductionCalculator() {
     } else if (zmiana === "2") {
       return (
         (godzina === 16 && minuta >= 45) ||
-        (godzina === 17 && minuta < 0) ||
         (godzina === 19 && minuta < 30) ||
         (godzina === 21 && minuta < 13)
       );
@@ -64,7 +63,7 @@ export default function ProductionCalculator() {
     const numerSamochoduInt = parseInt(numerSamochodu, 10);
     const pozostaleBaterie = numerNaWozkuInt - numerSamochoduInt;
 
-    const mnoznikCzasu = zmiana === "3" ? 2.76 : 1.4;
+    const mnoznikCzasu = zmiana === "3" ? 2.37 : 1.4;
     const czasTrwaniaProdukcji = pozostaleBaterie * mnoznikCzasu;
     const zaokraglonyCzasTrwaniaProdukcji = Math.round(czasTrwaniaProdukcji);
     let czasProdukcjiLokalny = new Date();
@@ -221,8 +220,8 @@ export default function ProductionCalculator() {
 
       <footer className="footer">
         <p>
-          &copy; 2024 My Production Calculator. All rights reserved. | Developed
-          by Szymon K | Version 1.2.0
+          &copy; 2024 My Production Audi Calculator. All rights reserved. |
+          Developed by Szymon K | Version 1.2.1
         </p>
       </footer>
     </div>
