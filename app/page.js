@@ -175,13 +175,15 @@ export default function ProductionCalculator() {
         darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      {/* Przełącznik trybu jasnego/ciemnego jako ikona */}
-      <button
-        onClick={() => setDarkMode(!darkMode)}
-        className="absolute top-4 right-4 text-2xl"
-      >
-        {darkMode ? "☀️" : "🌙"}
-      </button>
+      {/* Navbar z przezroczystym tłem i ikoną trybu po lewej */}
+      <nav className="absolute top-4 left-4 flex justify-start bg-transparent w-full">
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="toggle-mode text-2xl"
+        >
+          {darkMode ? "☀️" : "🌙"}
+        </button>
+      </nav>
 
       <Image
         src="/logo.png"

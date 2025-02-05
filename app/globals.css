@@ -70,3 +70,11 @@ body.dark .result {
 body.dark .footer {
   @apply bg-gray-700 text-gray-300;
 }
+
+/* Dodatkowa klasa dla navbaru, chociaż używamy tailwindowych klas inline */
+.navbar {
+  @apply bg-transparent;
+}
+button.toggle-mode {
+  @apply bg-transparent w-auto p-0 m-0 rounded-none hover:bg-transparent;
+}

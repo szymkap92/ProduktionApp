@@ -31,3 +31,9 @@
   transform: translate(-50%, -50%);
   border-radius: 50%;
 }
+
+/* Dark mode override */
+:global(body.dark) .clock .needle,
+:global(body.dark) .clock .centerPoint {
+  background-color: white;
+}
