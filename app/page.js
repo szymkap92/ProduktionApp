@@ -18,6 +18,15 @@ export default function ProductionCalculator() {
   const [czyPrzerwa, setCzyPrzerwa] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
+  const roznicaMinut = (czasDocelowy) =>
+    Math.max(0, Math.round((czasDocelowy - new Date()) / 60000));
+  const getCzasZakonczeniaColor = (czasDocelowy) => {
+    const minutesLeft = roznicaMinut(czasDocelowy);
+    if (minutesLeft > 60) return "green";
+    if (minutesLeft > 30) return "orange";
+    return "red";
+  };
+
   // Efekt ładowania
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
@@ -63,10 +72,10 @@ export default function ProductionCalculator() {
   const jestPrzerwa = (godzina, minuta) => {
     if (zmiana === "1") {
       return (
-        (godzina === 8 && minuta >= 0 && minuta < 30) ||
-        (godzina === 10 && minuta >= 45) ||
-        (godzina === 11 && minuta < 21) ||
-        (godzina === 13 && minuta < 13)
+        (godzina === 8 && minuta >= 0 && minuta < 15) || // 08:00 - 08:15
+        (godzina === 10 && minuta >= 45) || // 10:45 - 11:00
+        (godzina === 11 && minuta < 20) || // 11:00 - 11:20
+        (godzina === 13 && minuta < 12) // 13:00 - 13:12
       );
     } else if (zmiana === "2") {
       return (
@@ -284,7 +293,15 @@ export default function ProductionCalculator() {
           </p>
           <p className="text-lg">
             <span className="font-semibold">Voraussichtliche Endzeit:</span>{" "}
-            {czasZakonczenia}
+            <span
+              style={{
+                color: getCzasZakonczeniaColor(productionEnd),
+                fontWeight: "bold",
+                fontSize: "1.5rem", // większa czcionka
+              }}
+            >
+              {czasZakonczenia}
+            </span>
           </p>
         </div>
       )}
@@ -309,7 +326,7 @@ export default function ProductionCalculator() {
       <footer className="footer mt-8">
         <p>
           &copy; 2025 My Production Audi Calculator. All rights reserved. |
-          Developed by Szymon K | Version 2.3.0
+          Developed by Szymon K | Version 2.3.1
         </p>
       </footer>
     </div>
