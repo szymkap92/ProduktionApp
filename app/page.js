@@ -17,7 +17,7 @@ export default function ProductionCalculator() {
   const [aktualnyCzas, setAktualnyCzas] = useState(new Date());
   const [czyPrzerwa, setCzyPrzerwa] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-
+  const [mnoznikCzasu, setMnoznikCzasu] = useState("1.4"); // domyślnie 1.4
   const roznicaMinut = (czasDocelowy) =>
     Math.max(0, Math.round((czasDocelowy - new Date()) / 60000));
   const getCzasZakonczeniaColor = (czasDocelowy) => {
@@ -43,6 +43,14 @@ export default function ProductionCalculator() {
       setCzyPrzerwa(jestPrzerwa(godzina, minuta));
     }, 1000);
     return () => clearInterval(interval);
+  }, [zmiana]);
+
+  useEffect(() => {
+    if (zmiana === "3") {
+      setMnoznikCzasu("2.30");
+    } else {
+      setMnoznikCzasu("1.4");
+    }
   }, [zmiana]);
 
   // Powiadomienie przeglądarkowe przy zakończeniu produkcji
@@ -100,8 +108,8 @@ export default function ProductionCalculator() {
     const numerSamochoduInt = parseInt(numerSamochodu, 10);
     const pozostaleBaterie = numerNaWozkuInt - numerSamochoduInt;
 
-    const mnoznikCzasu = zmiana === "3" ? 2.37 : 1.4;
-    const czasTrwaniaProdukcji = pozostaleBaterie * mnoznikCzasu;
+    const mnoznikCzasuFloat = parseFloat(mnoznikCzasu);
+    const czasTrwaniaProdukcji = pozostaleBaterie * mnoznikCzasuFloat;
     const zaokraglonyCzasTrwaniaProdukcji = Math.round(czasTrwaniaProdukcji);
     let czasProdukcjiLokalny = new Date();
 
@@ -275,6 +283,18 @@ export default function ProductionCalculator() {
             placeholder="Geben Sie die Autonummer ein"
           />
         </label>
+        <label className="block mb-4">
+          <span className="text-gray-800 font-medium">
+            Zeitmultiplikator (änderbar):
+          </span>
+          <input
+            type="number"
+            step="0.01"
+            value={mnoznikCzasu}
+            onChange={(e) => setMnoznikCzasu(e.target.value)}
+            className="mt-2 p-2 w-full border border-gray-400 rounded-md focus:outline-none focus:ring focus:ring-gray-600 text-black bg-white"
+          />
+        </label>
 
         <button
           onClick={obliczCzasProdukcji}
@@ -326,7 +346,7 @@ export default function ProductionCalculator() {
       <footer className="footer mt-8">
         <p>
           &copy; 2025 My Production Audi Calculator. All rights reserved. |
-          Developed by Szymon K | Version 2.3.1
+          Developed by Szymon K | Version 2.3.2
         </p>
       </footer>
     </div>
