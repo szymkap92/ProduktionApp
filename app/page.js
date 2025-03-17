@@ -175,7 +175,7 @@ export default function ProductionCalculator() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
         <Image
-          src="/logo.png"
+          src="/audilogo.jpg"
           alt="Logo"
           width={140}
           height={140}
