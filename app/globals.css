@@ -9,8 +9,8 @@ body {
 
 .container {
   @apply max-w-md w-full mx-auto p-6 rounded-lg shadow-md;
-  background: rgba(255, 255, 255, 0.65); /* Przezroczyste białe */
-  backdrop-filter: blur(1px); /* Rozmycie tła */
+  background: rgba(255, 255, 255, 0.85); /* Przezroczyste białe */
+  /* backdrop-blur-none;  <-- rozmycie wyłączone */
 }
 
 .title {
@@ -31,8 +31,8 @@ button {
 
 .result {
   @apply mt-8 w-full max-w-md p-4 rounded-lg shadow-md text-gray-900;
-  background: rgba(255, 255, 255, 0.85); /* Przezroczyste białe */
-  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.9); /* Przezroczyste białe */
+  /* backdrop-blur-none;  <-- rozmycie wyłączone */
 }
 
 .result p {
@@ -55,7 +55,7 @@ body.dark {
 body.dark .container {
   @apply shadow-lg;
   background: rgba(30, 30, 30, 0.85); /* Przezroczyste ciemne */
-  backdrop-filter: blur(6px);
+  /* backdrop-blur-none;  <-- rozmycie wyłączone */
 }
 
 body.dark .title {
@@ -71,9 +71,9 @@ body.dark input {
 }
 
 body.dark .result {
-  background: rgba(30, 30, 30, 0.85); /* Przezroczyste ciemne */
-  backdrop-filter: blur(6px);
   @apply text-gray-100;
+  background: rgba(30, 30, 30, 0.9); /* Przezroczyste ciemne */
+  /* backdrop-blur-none;  <-- rozmycie wyłączone */
 }
 
 body.dark .footer {
