@@ -189,8 +189,16 @@ export default function ProductionCalculator() {
   return (
     <div
       className={`flex flex-col items-center justify-center min-h-screen p-6 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+        darkMode ? "text-white" : "text-gray-900"
       }`}
+      style={{
+        backgroundImage: `url(${
+          darkMode ? "/background-dark.jpg" : "/background-light.jpg"
+        })`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       {/* Navbar z przezroczystym tłem i ikoną trybu po lewej */}
       <nav className="absolute top-4 left-4 flex justify-start bg-transparent w-full">
