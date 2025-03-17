@@ -8,7 +8,9 @@ body {
 }
 
 .container {
-  @apply max-w-md mx-auto p-6 bg-white shadow-md rounded-lg;
+  @apply max-w-md w-full mx-auto p-6 rounded-lg shadow-md;
+  background: rgba(255, 255, 255, 0.65); /* Przezroczyste białe */
+  backdrop-filter: blur(6px); /* Rozmycie tła */
 }
 
 .title {
@@ -28,7 +30,9 @@ button {
 }
 
 .result {
-  @apply mt-8 w-full max-w-md p-4 bg-white rounded-lg shadow-md text-gray-900;
+  @apply mt-8 w-full max-w-md p-4 rounded-lg shadow-md text-gray-900;
+  background: rgba(255, 255, 255, 0.85); /* Przezroczyste białe */
+  backdrop-filter: blur(6px);
 }
 
 .result p {
@@ -49,7 +53,9 @@ body.dark {
 }
 
 body.dark .container {
-  @apply bg-gray-800 shadow-lg;
+  @apply shadow-lg;
+  background: rgba(30, 30, 30, 0.85); /* Przezroczyste ciemne */
+  backdrop-filter: blur(6px);
 }
 
 body.dark .title {
@@ -65,7 +71,9 @@ body.dark input {
 }
 
 body.dark .result {
-  @apply bg-gray-800 text-gray-100;
+  background: rgba(30, 30, 30, 0.85); /* Przezroczyste ciemne */
+  backdrop-filter: blur(6px);
+  @apply text-gray-100;
 }
 
 body.dark .footer {
@@ -90,4 +98,27 @@ button.toggle-mode {
 /* === Data (żeby też była ładna i widoczna, nawet opcjonalnie do zmiany) === */
 .date {
   @apply text-lg mt-2 font-medium text-white drop-shadow-sm;
+}
+
+/* === Responsywność dla mniejszych ekranów === */
+@media (max-width: 768px) {
+  .container {
+    @apply p-4;
+  }
+
+  .time {
+    @apply text-2xl;
+  }
+
+  .title {
+    @apply text-2xl mb-6;
+  }
+
+  .date {
+    @apply text-base;
+  }
+
+  button {
+    @apply py-2;
+  }
 }
