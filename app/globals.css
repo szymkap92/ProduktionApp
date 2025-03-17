@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* === Light mode (domyślny) === */
 body {
   @apply text-gray-900 bg-gray-100 font-sans transition-colors ease-in-out duration-300;
 }
@@ -42,7 +43,7 @@ button {
   @apply mb-4;
 }
 
-/* Dark mode styles */
+/* === Dark mode === */
 body.dark {
   @apply text-gray-100 bg-gray-900;
 }
@@ -71,10 +72,22 @@ body.dark .footer {
   @apply bg-gray-700 text-gray-300;
 }
 
-/* Dodatkowa klasa dla navbaru, chociaż używamy tailwindowych klas inline */
+/* === Navbar przezroczysty === */
 .navbar {
   @apply bg-transparent;
 }
+
+/* === Przyciski zmiany trybu === */
 button.toggle-mode {
   @apply bg-transparent w-auto p-0 m-0 rounded-none hover:bg-transparent;
+}
+
+/* === Godzina ZAWSZE biała z cieniem (żeby była widoczna na tle) === */
+.time {
+  @apply text-white font-bold text-3xl drop-shadow-md;
+}
+
+/* === Data (żeby też była ładna i widoczna, nawet opcjonalnie do zmiany) === */
+.date {
+  @apply text-lg mt-2 font-medium text-white drop-shadow-sm;
 }

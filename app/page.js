@@ -175,7 +175,7 @@ export default function ProductionCalculator() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
         <Image
-          src="/audilogo.jpg"
+          src="/logo.png"
           alt="Logo"
           width={140}
           height={140}
@@ -188,9 +188,9 @@ export default function ProductionCalculator() {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center min-h-screen p-6 ${
-        darkMode ? "text-white" : "text-gray-900"
-      }`}
+      className={`flex flex-col items-center justify-center min-h-screen 
+    p-2 sm:p-4 md:p-6 lg:p-8 xl:p-10 
+    ${darkMode ? "text-white" : "text-gray-900"}`}
       style={{
         backgroundImage: `url(${
           darkMode ? "/background-dark.jpg" : "/background-light.jpg"
@@ -236,13 +236,13 @@ export default function ProductionCalculator() {
           />
           <div className={styles.centerPoint}></div>
         </div>
-        <div className={styles.time}>
+        <div className="text-white font-bold text-3xl drop-shadow-md">
           {aktualnyCzas.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           })}
         </div>
-        <div className={styles.date}>
+        <div className="text-white font-semibold text-xl drop-shadow-md mt-2">
           {aktualnyCzas.toLocaleDateString("en-US", {
             weekday: "long",
             month: "long",
