@@ -17,7 +17,7 @@ export default function ProductionCalculator() {
   const [aktualnyCzas, setAktualnyCzas] = useState(new Date());
   const [czyPrzerwa, setCzyPrzerwa] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [mnoznikCzasu, setMnoznikCzasu] = useState("1.4"); // domyślnie 1.4
+  const [mnoznikCzasu, setMnoznikCzasu] = useState("1.33"); // domyślnie 1.4
   const roznicaMinut = (czasDocelowy) =>
     Math.max(0, Math.round((czasDocelowy - new Date()) / 60000));
   const getCzasZakonczeniaColor = (czasDocelowy) => {
@@ -46,11 +46,7 @@ export default function ProductionCalculator() {
   }, [zmiana]);
 
   useEffect(() => {
-    if (zmiana === "3") {
-      setMnoznikCzasu("2.30");
-    } else {
-      setMnoznikCzasu("1.4");
-    }
+    setMnoznikCzasu("1.33");
   }, [zmiana]);
 
   // Powiadomienie przeglądarkowe przy zakończeniu produkcji
